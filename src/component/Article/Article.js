@@ -1,6 +1,10 @@
 import useGeolocation from "react-hook-geolocation";
 import {useState, useRef, useEffect} from "react";
-import { kakaoAPIKey } from "../../config/common";
+import { kakaoAPIDomain,dataDomain,cityList, kakaoAPIKey } from "../../config/common";
+
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField';
+
 
 export default function Article(){
     const geolocation =useGeolocation();
@@ -12,26 +16,23 @@ export default function Article(){
     const region_3depth_name = useRef();
 
     const [isLocation,setIsLocation] = useState(true);
+
     const [city,setCity] = useState();
     const [dis ,setDis] = useState();
+    const [disList,setDisList] = useState([]);
     const [nei,setNei] = useState();
+    const [neiList,setNeiList] = useState([]);
 
-    /**
-     * TODO LIST
-     * 현제위치를 가져오면 시구동 밑에 주소 입력 란에 들어가게 ㄱㄱ
-     * 지금 현제위치를 위도와 경도로 가져왔는데 이것을 반환해 사용자가 클릭 한번에 
-     * 호다닥 되게
-     */
     //좌표를 통해 자연어 주소를 구하는 API
     function clickCurrentLocation(event){
-    
         if(event.target.textContent === "현제 위치 입력"){
-            fetch(`https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?x=${geolocation.longitude}&y=${geolocation.latitude}`,{
+            fetch(`${kakaoAPIDomain}?x=${geolocation.longitude}&y=${geolocation.latitude}`,{
                 method: "GET",
                 headers:{
                     Authorization: `${kakaoAPIKey}`
                 }
-            }).then(response => response.json())
+            }).then(response => 
+                response.json())
             .then(location =>{
                 console.log(JSON.stringify(location));
                 // setDocumentLocation(location);
@@ -41,7 +42,6 @@ export default function Article(){
                 setIsLocation(false);
             })
         }else{
-            
             setIsLocation(true);
         }
     }
@@ -56,6 +56,25 @@ export default function Article(){
     function check(){
         console.log(isLocation);
     }
+
+    function distrctListSearch(e,value){
+        setCity(value);
+        fetch(`${dataDomain}/weather/districtList?city=${value}`)
+        .then(response =>response.text()).then(
+            (data)=>{
+                setDisList(data.split(", "));
+            }
+        )
+    }
+    function neighborhoodListSearch(e,value){
+        setDis(value);
+        fetch(`${dataDomain}/weather/neighborhoodList?district=${value}`)
+        .then(response =>response.text()).then(
+            (data)=>{
+                setNeiList(data.split("\",\""));
+            }
+        )
+    }    
     return(
             <article>
                 <div>
@@ -69,17 +88,42 @@ export default function Article(){
                     </div>
                     {/* {isLocation ? ( */}
                         <>
-                    <button onClick={clickCurrentLocation}>{isLocation ? "현제 위치 입력": "직접 위치 입력"}</button> 
+                        <form>
+                    <button type={isLocation ? "reset" :null }onClick={clickCurrentLocation}>{isLocation ? "현제 위치 입력": "직접 위치 입력"}</button> 
                     <div>
                         <label>시</label>
                         <label>구</label>
                         <label>동</label>
                     </div>
                     <div>
+                        <div>
+                            <Autocomplete
+                                freeSolo
+                                options={cityList.map((option) => option)}
+                                renderInput={(params) => <TextField {...params} label="시/도"/>}
+                                onChange={distrctListSearch}
+                                value={isLocation ? null : city} readOnly={!isLocation}
+                            />
+                            <Autocomplete
+                                freeSolo
+                                options={disList.map((option) => option)}
+                                renderInput={(params) => <TextField {...params} label="시/구/군"/>}
+                                onChange={neighborhoodListSearch}
+                                value={isLocation ?  null:dis} readOnly={!isLocation}
+                            />
+                            <Autocomplete
+                                freeSolo
+                                options={neiList.map((option) => option)}
+                                renderInput={(params) => <TextField {...params} label="동/읍/리"/>}
+                                value={isLocation ?  null:nei} readOnly={!isLocation}
+                            />
+                        </div>
                         <input type="text" className="input" ref={region_1depth_name} value={isLocation ? null : city} readOnly={!isLocation}/>
                         <input type="text" className="input"ref={region_2depth_name} value={isLocation ?  null:dis} readOnly={!isLocation}/>
                         <input type="text" className="input"ref={region_3depth_name} value={isLocation ?  null:nei} readOnly={!isLocation}/>
+                    
                     </div>
+                    </form>
                     <button>검색</button>
                     </>
                     {/* ):(
