@@ -4,8 +4,17 @@ import { kakaoAPIDomain,dataDomain,cityList, kakaoAPIKey } from "../../config/co
 
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
-import { Grid } from "@mui/material";
+import { Grid,Button,ButtonGroup } from "@mui/material";
 import Container from '@mui/material/Container';
+import LocationSearchingIcon from '@mui/icons-material/LocationSearching';
+import SearchIcon from '@mui/icons-material/Search';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 
 
 export default function Article(){
@@ -91,27 +100,27 @@ export default function Article(){
     //         setCity('');
     //     }
     // },[isLocation])
+
+
+    function createData(name, calories, fat, carbs, protein) {
+        return { name, calories, fat, carbs, protein };
+      }
+      
+      const rows = [
+        createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
+        createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
+        createData('Eclair', 262, 16.0, 24, 6.0),
+        createData('Cupcake', 305, 3.7, 67, 4.3),
+        createData('Gingerbread', 356, 16.0, 49, 3.9),
+      ];
     return(
             <article>
-                <div>
-                    <div>안녕하세요</div>
-                    <div>반갑읍니다.</div>
-                </div>
-                <div>
-                    <p>날씨를 알고싶은 곳을 선택을 해주세요</p>
-                    <div>
-                        <button onClick={check}/>
-                    </div>
                         <>
+
+                    {/*Section 1 검색을 위한 섹션*/}
                         <form>
-                    <button onClick={isLocation ? clickCurrentLocation :reset}>{isLocation ? "현제 위치 입력": "직접 위치 입력"}</button> 
-                    <div>
-                        <label>시</label>
-                        <label>구</label>
-                        <label>동</label>
-                    </div>
-                    <div>
                     <Container maxWidth="xm">
+                            <p>날씨를 알고싶은 곳을 선택을 해주세요</p>
                             <Grid container spacing={3}>
                                 <Grid item xs={4}>
                                 <Autocomplete
@@ -143,12 +152,48 @@ export default function Article(){
                                 />
                                 </Grid>
                             </Grid>
+                            <ButtonGroup variant="outlined" aria-label="Basic button group" style={{marginTop: '16px'}}>
+                                <Button variant="outlined" onClick={isLocation ? clickCurrentLocation :reset} startIcon={<LocationSearchingIcon/>}>{isLocation ? "현제 위치 입력": "직접 위치 입력"}</Button>
+                                <Button variant="outlined" onClick={isLocation ? clickCurrentLocation :reset} startIcon={<SearchIcon/>}>검색</Button>
+                            </ButtonGroup>
                         </Container>
-                    </div>
                     </form>
-                    <button>검색</button>
+                    {/*Section 2 결과를 확인하는 섹션*/}
+                    <Container maxWidth="mx">
+
+                    <h1>{city} {dis} {nei} 날씨</h1>
+                    <TableContainer component={Paper}>
+                        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                            <TableHead>
+                            <TableRow>
+                                <TableCell>Dessert (100g serving)</TableCell>
+                                <TableCell align="right">Calories</TableCell>
+                                <TableCell align="right">Fat&nbsp;(g)</TableCell>
+                                <TableCell align="right">Carbs&nbsp;(g)</TableCell>
+                                <TableCell align="right">Protein&nbsp;(g)</TableCell>
+                            </TableRow>
+                            </TableHead>
+                            <TableBody>
+                            {rows.map((row) => (
+                                <TableRow
+                                key={row.name}
+                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                >
+                                <TableCell component="th" scope="row">
+                                    {row.name}
+                                </TableCell>
+                                <TableCell align="right">{row.calories}</TableCell>
+                                <TableCell align="right">{row.fat}</TableCell>
+                                <TableCell align="right">{row.carbs}</TableCell>
+                                <TableCell align="right">{row.protein}</TableCell>
+                                </TableRow>
+                            ))}
+                            </TableBody>
+                        </Table>
+                        </TableContainer>
+                        
+                    </Container>
                     </>
-                </div>
             </article>
     );
 } 
