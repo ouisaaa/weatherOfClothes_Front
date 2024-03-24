@@ -1,6 +1,7 @@
 import useGeolocation from "react-hook-geolocation";
 import {useState, useRef, useEffect} from "react";
-import { kakaoAPIDomain,dataDomain,cityList, kakaoAPIKey } from "../../config/common";
+import {Link} from "react-router-dom" ;  
+import { kakaoAPIDomain,dataDomain,cityList, kakaoAPIKey } from "../config/common";
 
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
@@ -8,13 +9,6 @@ import { Grid,Button,ButtonGroup } from "@mui/material";
 import Container from '@mui/material/Container';
 import LocationSearchingIcon from '@mui/icons-material/LocationSearching';
 import SearchIcon from '@mui/icons-material/Search';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
 
 
 export default function Article(){
@@ -102,17 +96,6 @@ export default function Article(){
     // },[isLocation])
 
 
-    function createData(name, calories, fat, carbs, protein) {
-        return { name, calories, fat, carbs, protein };
-      }
-      
-      const rows = [
-        createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-        createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-        createData('Eclair', 262, 16.0, 24, 6.0),
-        createData('Cupcake', 305, 3.7, 67, 4.3),
-        createData('Gingerbread', 356, 16.0, 49, 3.9),
-      ];
     return(
             <article>
                         <>
@@ -154,45 +137,10 @@ export default function Article(){
                             </Grid>
                             <ButtonGroup variant="outlined" aria-label="Basic button group" style={{marginTop: '16px'}}>
                                 <Button variant="outlined" onClick={isLocation ? clickCurrentLocation :reset} startIcon={<LocationSearchingIcon/>}>{isLocation ? "현제 위치 입력": "직접 위치 입력"}</Button>
-                                <Button variant="outlined" onClick={isLocation ? clickCurrentLocation :reset} startIcon={<SearchIcon/>}>검색</Button>
+                                <Link to={"/result/"+city+"/"+dis+"/"+nei}><Button variant="outlined" startIcon={<SearchIcon/>}>검색</Button></Link>
                             </ButtonGroup>
                         </Container>
                     </form>
-                    {/*Section 2 결과를 확인하는 섹션*/}
-                    <Container maxWidth="mx">
-
-                    <h1>{city} {dis} {nei} 날씨</h1>
-                    <TableContainer component={Paper}>
-                        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                            <TableHead>
-                            <TableRow>
-                                <TableCell>Dessert (100g serving)</TableCell>
-                                <TableCell align="right">Calories</TableCell>
-                                <TableCell align="right">Fat&nbsp;(g)</TableCell>
-                                <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-                                <TableCell align="right">Protein&nbsp;(g)</TableCell>
-                            </TableRow>
-                            </TableHead>
-                            <TableBody>
-                            {rows.map((row) => (
-                                <TableRow
-                                key={row.name}
-                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                >
-                                <TableCell component="th" scope="row">
-                                    {row.name}
-                                </TableCell>
-                                <TableCell align="right">{row.calories}</TableCell>
-                                <TableCell align="right">{row.fat}</TableCell>
-                                <TableCell align="right">{row.carbs}</TableCell>
-                                <TableCell align="right">{row.protein}</TableCell>
-                                </TableRow>
-                            ))}
-                            </TableBody>
-                        </Table>
-                        </TableContainer>
-                        
-                    </Container>
                     </>
             </article>
     );
