@@ -5,21 +5,15 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import Container from '@mui/material/Container';
-import Box from '@mui/material/Box';
+
+
+import { Grid,Container, Box } from "@mui/material";
 import { LineChart } from '@mui/x-charts/LineChart';
-import { styled } from '@mui/material/styles';
 
 
 import { useParams } from 'react-router-dom';
 
-const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  }));
+import {Item} from '../config/ItemTag';
 
 export default function Result(){
     const params = useParams();
@@ -41,28 +35,38 @@ export default function Result(){
         <>
         <article>
           {/*Section 2 결과를 확인하는 섹션*/}
-          <Container maxWidth="mx">            
-          <h1>{params.city} {params.dis} {params.nei} 날씨</h1>
-          
-          <Box sx={{ flexGrow: 1}}>
-            <Item>
-          <LineChart
-            xAxis={[{ data: [1, 2, 3, 5, 8, 10],label: "시간" }]}
-            yAxis={[{
-                label: "기온"}]}
-            series={[
-                {
-                data: [2, 5.5, 2, 8.5, 1.5, 5],
-                },
-            ]}
-            minWidth={650}
-            height={300}
-            />
-            </Item>
-         </Box>
+          <Container maxWidth="mx" sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'flex-start',
+                        height: '100vh'
+                    }}> 
+                     <Box sx={{ 
+                            flexGrow: 1,
+                            maxWidth: { xs: 500, md: '50%' },
+                            maxHeight: { xs: 500, md: '65%' },
+                            }}>
+                            <Item>
+            <Grid container spacing={2}> 
+          <Grid item xs={12}>
+                <h1>{params.city} {params.dis} {params.nei} 날씨</h1>
+                <LineChart
+                    xAxis={[{ data: [1, 2, 3, 5, 8, 10],label: "시간" }]}
+                    yAxis={[{
+                        label: "기온"}]}
+                    series={[
+                        {
+                        data: [2, 5.5, 2, 8.5, 1.5, 5],
+                        },
+                    ]}
+                    minWidth={650}
+                    height={300}
+                  />
+        
+            </Grid>
 
-          
-          <TableContainer component={Paper}>
+        <Grid item xs={12}>
+          <TableContainer component={Paper} sx={{boder:'1px solid white'}}>
               <Table sx={{ minWidth: 650 }} aria-label="simple table">
                   <TableHead>
                   <TableRow>
@@ -91,6 +95,10 @@ export default function Result(){
                   </TableBody>
               </Table>
               </TableContainer>
+              </Grid>
+              </Grid>
+              </Item>
+              </Box>
           </Container>
           </article>
           </>

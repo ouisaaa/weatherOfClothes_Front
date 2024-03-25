@@ -1,13 +1,22 @@
-import "../public/TopNavigator.css"
 
-export default function TopNavigator(){
+import {AppBar, Box,Typography,Toolbar,useScrollTrigger,Slide} from '@mui/material'
+
+
+
+ 
+export default function TopNavigator(props){
     
+   
     return(
         <>
-            <nav>
-                <h1>호라라라</h1>
-                
-            </nav>
+            <Box sx={{ flexGrow: 1 }}>
+                <AppBar position="static" color={'primary'}>
+                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                    Weather
+                </Typography>
+                </AppBar>
+            </Box>
+            <Toolbar />
         </>
     );
 }
