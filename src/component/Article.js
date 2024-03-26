@@ -87,6 +87,7 @@ export default function Article(){
         Promise.all([setCity(''),setDis(''),setNei('')]).then(()=>setIsLocation(true))
     }
 
+    
     return(
             <article>
                         <>
@@ -97,7 +98,7 @@ export default function Article(){
                         display: 'flex',
                         justifyContent: 'center',
                         alignItems: 'flex-start',
-                        height: '100vh'
+                        height: '90vh'
                     }}> 
                         <Box sx={{ 
                             flexGrow: 1,
@@ -105,7 +106,7 @@ export default function Article(){
                             maxHeight: { xs: 500, md: '65%' },
                             }}>
                             <Item>
-                                <Grid container spacing={3} sx={{}}>
+                                <Grid container spacing={3}>
                                     <Grid item xs={12}>
                                         <p>날씨를 알고싶은 곳을 선택을 해주세요</p>
                                     </Grid>
@@ -134,6 +135,7 @@ export default function Article(){
                                             freeSolo
                                             options={neiList.map((option) => option)}
                                             renderInput={(params) => <TextField {...params} label="동/읍/리"/>}
+                                            onChange={(e,value)=>{setNei(value)}}
                                             value={isLocation ?  null:nei} readOnly={!isLocation}
                                             ref={region_3depth_name} 
                                         />
