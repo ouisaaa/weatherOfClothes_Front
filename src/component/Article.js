@@ -1,6 +1,6 @@
 import useGeolocation from "react-hook-geolocation";
 import {useState, useRef, useEffect} from "react";
-import {Link} from "react-router-dom" ;  
+import {Link, useNavigate} from "react-router-dom" ;  
 
 import { kakaoAPIDomain,dataDomain,cityList, kakaoAPIKey } from "../config/common";
 import {Item} from "../config/ItemTag";
@@ -31,6 +31,8 @@ export default function Article(){
     const [disList,setDisList] = useState([]);
     const [nei,setNei] = useState();
     const [neiList,setNeiList] = useState([]);
+
+    const navigator= useNavigate();
 
     //좌표를 통해 자연어 주소를 구하는 API
     function clickCurrentLocation(event){
@@ -86,7 +88,16 @@ export default function Article(){
         e.preventDefault();
         Promise.all([setCity(''),setDis(''),setNei('')]).then(()=>setIsLocation(true))
     }
-
+    
+    function searchWeather(){
+        fetch(`${dataDomain}/weather/getWeather?city=${city}&district=${dis}&neighborhood=${nei}`)
+        .then(res =>res.json()) 
+        .then(data=>{
+            navigator(`/result/${city}/${dis}/${nei}`
+            ,{state: {hour:data.OpenAPI_httpResponse.response.body.items.item
+                ,windChill:data.Wind_Chill.windChill}})
+        })
+    }
     
     return(
             <article>
@@ -143,7 +154,7 @@ export default function Article(){
                                     <Grid item xs={12}>
                                         <ButtonGroup variant="outlined" aria-label="Basic button group">
                                             <Button variant="outlined" onClick={isLocation ? clickCurrentLocation :reset} startIcon={isLocation? <LocationSearchingIcon/>:<HistoryEduIcon/> }>{isLocation ? "현제 위치 입력": "직접 위치 입력"}</Button>
-                                            <Link to={"/result/"+city+"/"+dis+"/"+nei}><Button variant="outlined" startIcon={<SearchIcon/>}>검색</Button></Link>
+                                            <Button variant="outlined" startIcon={<SearchIcon/>} onClick={searchWeather}>검색</Button>
                                         </ButtonGroup>
                                     </Grid>
                                 </Grid>
