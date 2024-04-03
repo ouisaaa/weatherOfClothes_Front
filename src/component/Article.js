@@ -1,8 +1,8 @@
 import useGeolocation from "react-hook-geolocation";
-import {useState, useRef, useEffect} from "react";
-import {Link, useNavigate} from "react-router-dom" ;  
+import {useState, useRef} from "react";
+import {useNavigate} from "react-router-dom" ;  
 
-import { kakaoAPIDomain,dataDomain,cityList, kakaoAPIKey } from "../config/common";
+import { dataDomain,cityList} from "../config/common";
 import {Item} from "../config/ItemTag";
 
 import Autocomplete from '@mui/material/Autocomplete';
@@ -18,8 +18,6 @@ import HistoryEduIcon from '@mui/icons-material/HistoryEdu';
 export default function Article(){
     const geolocation =useGeolocation();
     
-    const [documentLocation,setDocumentLocation] = useState({});
-
     const region_1depth_name = useRef();
     const region_2depth_name = useRef();
     const region_3depth_name = useRef();
@@ -39,12 +37,8 @@ export default function Article(){
         event.preventDefault();
 
         if(event.target.textContent === "현제 위치 입력"){
-            fetch(`${kakaoAPIDomain}?x=${geolocation.longitude}&y=${geolocation.latitude}`,{
-                method: "GET",
-                headers:{
-                    Authorization: `${kakaoAPIKey}`
-                }
-            }).then(response => 
+            fetch(`${dataDomain}/getCurrent/location?x=${geolocation.longitude}&y=${geolocation.latitude}`)
+            .then(response => 
                 response.json())
             .then(location =>{
                 console.log(JSON.stringify(location));
@@ -60,11 +54,6 @@ export default function Article(){
         }
     }
     
-
-    function check(){
-        console.log(isLocation);
-    }
-
     function distrctListSearch(e,value){
         setCity(value);
         fetch(`${dataDomain}/weather/districtList?city=${value}`)
@@ -76,7 +65,7 @@ export default function Article(){
     }
     function neighborhoodListSearch(e,value){
         setDis(value);
-        fetch(`${dataDomain}/weather/neighborhoodList?district=${value}`)
+        fetch(`${dataDomain}/weather/neighborhoodList?dis=${value}`)
         .then(response =>response.text()).then(
             (data)=>{
                 setNeiList(data.split("\",\""));
@@ -84,19 +73,15 @@ export default function Article(){
         )
     }    
 
+    //리셋 버튼 클릭
     async function reset(e){
         e.preventDefault();
         Promise.all([setCity(''),setDis(''),setNei('')]).then(()=>setIsLocation(true))
     }
     
+    //각종 날씨 정보 조회 결과 창으로
     function searchWeather(){
-        fetch(`${dataDomain}/weather/getWeather?city=${city}&district=${dis}&neighborhood=${nei}`)
-        .then(res =>res.json()) 
-        .then(data=>{
-            navigator(`/result/${city}/${dis}/${nei}`
-            ,{state: {hour:data.OpenAPI_httpResponse.response.body.items.item
-                ,windChill:data.Wind_Chill.windChill}})
-        })
+        navigator(`/result/${city}/${dis}/${nei}`)
     }
     
     return(

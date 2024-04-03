@@ -2,11 +2,11 @@
 import { Container, Box, Tab,Tabs } from "@mui/material";
 
 
-import { useParams,useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import {Item} from '../config/ItemTag';
 import CustomTabPanel  from './CustomTabPanel.js';
-import {  useState } from 'react';
+import {  useEffect, useState } from 'react';
 
 import SixHourTab from './tabs/SixHourTab.js';
 
@@ -15,22 +15,37 @@ export default function Result(){
 
     const [tabs,setTabs]=useState();
 
-    const location = useLocation();
-    const hourData= location.state.hour;
-    const windChillData=location.state.windChill;
+    // const location = useLocation();
+    // const hourData= location.state.hour;
+    // const windChillData=location.state.windChill;
 
+    const [loding,setLoding] = useState(false);
+
+    const [hourData,setHourData]= useState([]);
+    const [windChillData,setWindChillData]=useState([]);
+    // const 
+    
+    // // useEffect(()=>{
+    // //     Promise.all([
+            
+    // //     ])
+    // // },[])
+
+
+    //탭 변경 이벤트
     function changeTabs(e,value){
         setTabs(value);
     }
     
-    
-  
+    //특정 탭
     function a11yProps(index) {
         return {
           id: `simple-tab-${index}`,
           'aria-controls': `simple-tabpanel-${index}`,
         };
-      }
+    }
+
+      
     return(
         <>
         <article>
