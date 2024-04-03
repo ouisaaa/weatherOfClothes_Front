@@ -47,7 +47,6 @@ export default function Article(){
                 setDis(location.documents[1].region_2depth_name);
                 setNei(location.documents[1].region_3depth_name);
                 setIsLocation(false);
-                
             })
         }else{
             setIsLocation(true);
@@ -81,7 +80,7 @@ export default function Article(){
     
     //각종 날씨 정보 조회 결과 창으로
     function searchWeather(){
-        navigator(`/result/${city}/${dis}/${nei}`)
+        navigator(`/result`, {state: {city: city, dis:dis, nei: nei, city2:city.slice(0,2)}});
     }
     
     return(

@@ -1,35 +1,56 @@
 
-import { Container, Box, Tab,Tabs } from "@mui/material";
+import { Container, Box, Tab,Tabs, Button } from "@mui/material";
 
 
-import { useParams } from 'react-router-dom';
+import { useParams,useLocation } from 'react-router-dom';
 
 import {Item} from '../config/ItemTag';
 import CustomTabPanel  from './CustomTabPanel.js';
-import {  useEffect, useState } from 'react';
+import useState from 'react';
+import { useQuery } from "@tanstack/react-query";
 
 import SixHourTab from './tabs/SixHourTab.js';
+import {dataDomain} from '../config/common.js'
+
 
 export default function Result(){
-    const params = useParams();
-
     const [tabs,setTabs]=useState();
 
-    // const location = useLocation();
+    const location = useLocation();
+
+
     // const hourData= location.state.hour;
     // const windChillData=location.state.windChill;
 
-    const [loding,setLoding] = useState(false);
+    // const [loding,setLoding] = useState(true);
 
-    const [hourData,setHourData]= useState([]);
-    const [windChillData,setWindChillData]=useState([]);
-    // const 
+    // const [SrtFcst,setSrtFcst]= useState([]);
+    // const [windChillFcst,setWindChillFcst]=useState([]);
+
+    // const [SrtNcst,setSrtNcst] = useState([]); 
+    // const [windChillNcst,setWindChillNcst] = useState([]);
     
-    // // useEffect(()=>{
-    // //     Promise.all([
-            
-    // //     ])
-    // // },[])
+    // const [CRMD,setCRMD] = useState([]);
+    // const []
+
+    const { isPending, error, data } = useQuery({
+        queryKey: ['repoData'],
+        queryFn: () =>
+          Promise.all([
+            fetch(`${dataDomain}/weather/getSrtFcst?city=${location.state.city}&district=${location.state.dis}&neighborhood=${location.state.nei}`).then((res) =>
+                res.json(),
+            ),
+            fetch(`${dataDomain}/weather/getSrtNcst?city=${location.state.city}&district=${location.state.dis}&neighborhood=${location.state.nei}`).then((res) =>
+                res.json(),
+            ),
+            fetch(`${dataDomain}/weather/getVliageFcst?city=${location.state.city}&district=${location.state.dis}&neighborhood=${location.state.nei}`).then((res) =>
+                res.json(),
+            ),
+            fetch(`${dataDomain}/CtprvnRltmMesureDnsty?city=${location.state.city}&nei=${location.state.nei}`).then((res) =>
+                res.json(),
+            ),
+        ])
+      })
 
 
     //탭 변경 이벤트
@@ -49,7 +70,8 @@ export default function Result(){
     return(
         <>
         <article>
-          {/*Section 2 결과를 확인하는 섹션*/}
+            
+          {/* Section 2 결과를 확인하는 섹션*/}
           <Container maxWidth="mx" sx={{
                         display: 'flex',
                         justifyContent: 'center',
@@ -69,11 +91,11 @@ export default function Result(){
                             <Tab label="Item Three" {...a11yProps(3)} />
                         </Tabs>
                         <CustomTabPanel value={tabs} index={0}>
-
+                            
                         </CustomTabPanel>        
                         <CustomTabPanel value={tabs} index={1}>
-                            <SixHourTab city={params.city} dis={params.dis} nei={params.nei}
-                                windChillData={windChillData} hourData={hourData}/>
+                            {/* <SixHourTab city={params.city} dis={params.dis} nei={params.nei}
+                                windChillData={windChillData} hourData={hourData}/> */}
                         </CustomTabPanel>
                         <CustomTabPanel value={tabs} index={2}>
 
