@@ -15,7 +15,7 @@ function App() {
        <BrowserRouter> 
         <Routes>  
           <Route path='/' element={<Article/>}></Route>
-          <Route path='/result/:city/:dis/:nei' element={<Result/>}></Route>
+          <Route path='/result' element={<Result/>}></Route>
         </Routes>
       </BrowserRouter>
       </QueryClientProvider>

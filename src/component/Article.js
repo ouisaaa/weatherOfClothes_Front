@@ -37,7 +37,7 @@ export default function Article(){
         event.preventDefault();
 
         if(event.target.textContent === "현제 위치 입력"){
-            fetch(`${dataDomain}/getCurrent/location?x=${geolocation.longitude}&y=${geolocation.latitude}`)
+            fetch(`${dataDomain}/getCurrent?x=${geolocation.longitude}&y=${geolocation.latitude}`)
             .then(response => 
                 response.json())
             .then(location =>{
@@ -55,19 +55,19 @@ export default function Article(){
     
     function distrctListSearch(e,value){
         setCity(value);
-        fetch(`${dataDomain}/weather/districtList?city=${value}`)
-        .then(response =>response.text()).then(
+        fetch(`${dataDomain}/districtList?city=${value}`)
+        .then(response =>response.json()).then(
             (data)=>{
-                setDisList(data.split(", "));
+                setDisList(data);
             }
         )
     }
     function neighborhoodListSearch(e,value){
         setDis(value);
-        fetch(`${dataDomain}/weather/neighborhoodList?dis=${value}`)
-        .then(response =>response.text()).then(
+        fetch(`${dataDomain}/neighborhoodList?dis=${value}`)
+        .then(response =>response.json()).then(
             (data)=>{
-                setNeiList(data.split("\",\""));
+                setNeiList(data);
             }
         )
     }    
